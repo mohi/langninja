@@ -260,11 +260,6 @@ class JapanesePitchTrainer {
     }
 
     async toggleRecording() {
-        if (!this.microphonePermission) {
-            this.showPermissionModal();
-            return;
-        }
-        
         if (!this.isRecording) {
             await this.startRecording();
         } else {
@@ -275,6 +270,7 @@ class JapanesePitchTrainer {
     async startRecording() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.microphonePermission = true;
             this.mediaRecorder = new MediaRecorder(stream);
             this.audioChunks = [];
             
@@ -310,7 +306,14 @@ class JapanesePitchTrainer {
             
         } catch (error) {
             console.error('Error accessing microphone:', error);
-            alert('Please allow microphone access to use this feature.');
+            this.microphonePermission = false;
+            
+            // Show permission modal only if there's an actual permission error
+            if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                this.showPermissionModal();
+            } else {
+                alert('Microphone access is required to use this feature. Please check your browser settings and try again.');
+            }
         }
     }
 
@@ -448,24 +451,10 @@ class JapanesePitchTrainer {
     }
     
     checkMicrophonePermission() {
-        if (navigator.permissions) {
-            navigator.permissions.query({ name: 'microphone' }).then((result) => {
-                if (result.state === 'granted') {
-                    this.microphonePermission = true;
-                    this.hidePermissionModal();
-                } else if (result.state === 'denied') {
-                    this.showPermissionDenied();
-                } else {
-                    this.showPermissionModal();
-                }
-            }).catch(() => {
-                // Fallback for browsers that don't support permissions API
-                this.showPermissionModal();
-            });
-        } else {
-            // Fallback for browsers that don't support permissions API
-            this.showPermissionModal();
-        }
+        // Don't show modal immediately - let user try to record first
+        // This prevents the modal from blocking the natural permission flow
+        this.microphonePermission = false;
+        this.hidePermissionModal();
     }
     
     showPermissionModal() {
@@ -492,7 +481,7 @@ class JapanesePitchTrainer {
             
             setTimeout(() => {
                 this.hidePermissionModal();
-            }, 2000);
+            }, 1500);
             
         } catch (error) {
             console.error('Microphone permission denied:', error);

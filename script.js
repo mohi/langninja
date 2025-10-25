@@ -80,6 +80,10 @@ class JapanesePitchTrainer {
             transcriptionArea: document.getElementById('transcriptionArea'),
             transcriptionText: document.getElementById('transcriptionText'),
             transcriptionConfidence: document.getElementById('transcriptionConfidence'),
+            pronunciationFeedback: document.getElementById('pronunciationFeedback'),
+            feedbackIcon: document.getElementById('feedbackIcon'),
+            feedbackMessage: document.getElementById('feedbackMessage'),
+            accuracyScore: document.getElementById('accuracyScore'),
             audioPlayback: document.getElementById('audioPlayback'),
             audioPlayer: document.getElementById('audioPlayer'),
             playBtn: document.getElementById('playBtn'),
@@ -175,6 +179,7 @@ class JapanesePitchTrainer {
         this.elements.feedbackArea.style.display = 'none';
         this.elements.audioPlayback.style.display = 'none';
         this.elements.transcriptionArea.style.display = 'none';
+        this.elements.pronunciationFeedback.style.display = 'none';
         
         // Reset recording button
         this.elements.recordBtn.innerHTML = `
@@ -365,14 +370,8 @@ class JapanesePitchTrainer {
             this.elements.transcriptionText.textContent = this.transcription;
             this.elements.transcriptionConfidence.textContent = `Confidence: ${Math.round(confidence * 100)}%`;
             
-            // Add visual feedback based on confidence
-            if (confidence > 0.8) {
-                this.elements.transcriptionText.style.color = '#38a169';
-            } else if (confidence > 0.6) {
-                this.elements.transcriptionText.style.color = '#d69e2e';
-            } else {
-                this.elements.transcriptionText.style.color = '#e53e3e';
-            }
+            // Check pronunciation accuracy
+            this.checkPronunciationAccuracy(this.transcription, confidence);
         };
         
         this.recognition.onerror = (event) => {
@@ -386,6 +385,99 @@ class JapanesePitchTrainer {
         };
         
         this.recognition.start();
+    }
+
+    checkPronunciationAccuracy(transcription, confidence) {
+        const lesson = this.lessons[this.currentQuestion];
+        const expectedPhrase = lesson.phrase;
+        
+        // Calculate similarity between transcribed text and expected phrase
+        const accuracy = this.calculateSimilarity(transcription, expectedPhrase);
+        const overallScore = (accuracy + confidence) / 2;
+        
+        // Show pronunciation feedback
+        this.elements.pronunciationFeedback.style.display = 'block';
+        
+        // Determine feedback based on accuracy
+        if (accuracy >= 0.8) {
+            this.showCorrectFeedback(accuracy, confidence);
+        } else if (accuracy >= 0.5) {
+            this.showPartialFeedback(accuracy, confidence);
+        } else {
+            this.showIncorrectFeedback(accuracy, confidence);
+        }
+    }
+
+    calculateSimilarity(str1, str2) {
+        // Normalize strings for comparison
+        const s1 = str1.toLowerCase().trim();
+        const s2 = str2.toLowerCase().trim();
+        
+        if (s1 === s2) return 1.0;
+        
+        // Calculate Levenshtein distance-based similarity
+        const maxLength = Math.max(s1.length, s2.length);
+        if (maxLength === 0) return 1.0;
+        
+        const distance = this.levenshteinDistance(s1, s2);
+        return 1 - (distance / maxLength);
+    }
+
+    levenshteinDistance(str1, str2) {
+        const matrix = [];
+        for (let i = 0; i <= str2.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= str1.length; j++) {
+            matrix[0][j] = j;
+        }
+        for (let i = 1; i <= str2.length; i++) {
+            for (let j = 1; j <= str1.length; j++) {
+                if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[str2.length][str1.length];
+    }
+
+    showCorrectFeedback(accuracy, confidence) {
+        this.elements.feedbackIcon.innerHTML = '✅';
+        this.elements.feedbackMessage.textContent = 'Excellent! Perfect pronunciation!';
+        this.elements.accuracyScore.textContent = `Accuracy: ${Math.round(accuracy * 100)}% | Confidence: ${Math.round(confidence * 100)}%`;
+        
+        this.elements.transcriptionText.style.color = '#38a169';
+        this.elements.transcriptionText.style.borderColor = '#38a169';
+        this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #f0fff4, #c6f6d5)';
+        this.elements.pronunciationFeedback.style.borderColor = '#38a169';
+    }
+
+    showPartialFeedback(accuracy, confidence) {
+        this.elements.feedbackIcon.innerHTML = '⚠️';
+        this.elements.feedbackMessage.textContent = 'Good attempt! Close but not quite right.';
+        this.elements.accuracyScore.textContent = `Accuracy: ${Math.round(accuracy * 100)}% | Confidence: ${Math.round(confidence * 100)}%`;
+        
+        this.elements.transcriptionText.style.color = '#d69e2e';
+        this.elements.transcriptionText.style.borderColor = '#d69e2e';
+        this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #fffbeb, #fef3c7)';
+        this.elements.pronunciationFeedback.style.borderColor = '#d69e2e';
+    }
+
+    showIncorrectFeedback(accuracy, confidence) {
+        this.elements.feedbackIcon.innerHTML = '❌';
+        this.elements.feedbackMessage.textContent = 'Not quite right. Listen to the reference voices and try again.';
+        this.elements.accuracyScore.textContent = `Accuracy: ${Math.round(accuracy * 100)}% | Confidence: ${Math.round(confidence * 100)}%`;
+        
+        this.elements.transcriptionText.style.color = '#e53e3e';
+        this.elements.transcriptionText.style.borderColor = '#e53e3e';
+        this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #fef5f5, #fed7d7)';
+        this.elements.pronunciationFeedback.style.borderColor = '#e53e3e';
     }
     
     stopRecording() {

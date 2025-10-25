@@ -644,6 +644,52 @@ body {
     font-weight: 500;
 }
 
+/* Pronunciation Feedback Styles */
+.pronunciation-feedback {
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.feedback-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    animation: bounce 0.6s ease-in-out;
+}
+
+.feedback-message {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2d3748;
+}
+
+.accuracy-score {
+    font-size: 0.9rem;
+    color: #718096;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {

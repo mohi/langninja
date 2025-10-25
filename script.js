@@ -308,12 +308,8 @@ class JapanesePitchTrainer {
             console.error('Error accessing microphone:', error);
             this.microphonePermission = false;
             
-            // Show permission modal only if there's an actual permission error
-            if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                this.showPermissionModal();
-            } else {
-                alert('Microphone access is required to use this feature. Please check your browser settings and try again.');
-            }
+            // Show permission modal for any microphone access error
+            this.showPermissionModal();
         }
     }
 
@@ -459,6 +455,8 @@ class JapanesePitchTrainer {
     
     showPermissionModal() {
         this.elements.permissionModal.style.display = 'flex';
+        this.elements.permissionStatus.textContent = 'Microphone access is required to record your pronunciation.';
+        this.elements.permissionStatus.className = 'permission-status info';
     }
     
     hidePermissionModal() {
@@ -485,7 +483,7 @@ class JapanesePitchTrainer {
             
         } catch (error) {
             console.error('Microphone permission denied:', error);
-            this.elements.permissionStatus.textContent = '❌ Microphone access denied. You can still use the app to listen to reference voices, but recording features will be disabled.';
+            this.elements.permissionStatus.textContent = '❌ Microphone access denied. Please check your browser settings and allow microphone access, then try again.';
             this.elements.permissionStatus.className = 'permission-status error';
             this.microphonePermission = false;
         }

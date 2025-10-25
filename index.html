@@ -15,7 +15,7 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="question-counter">
-                <span id="currentQuestion">1</span> / <span id="totalQuestions">3</span>
+                <span id="currentQuestion">1</span> / <span id="totalQuestions">4</span>
             </div>
         </header>
 
@@ -29,6 +29,12 @@
                     <div class="pitch-visualization">
                         <div class="pitch-bar high" id="pitch1">H</div>
                         <div class="pitch-bar low" id="pitch2">L</div>
+                        <div class="pitch-bar low" id="pitch3">L</div>
+                        <div class="pitch-bar low" id="pitch4">L</div>
+                        <div class="pitch-bar low" id="pitch5">L</div>
+                        <div class="pitch-bar low" id="pitch6">L</div>
+                        <div class="pitch-bar low" id="pitch7">L</div>
+                        <div class="pitch-bar low" id="pitch8">L</div>
                     </div>
                 </div>
                 <div class="meaning" id="meaning">橋 (bridge)</div>
@@ -41,16 +47,39 @@
             <!-- Audio Controls -->
             <div class="recording-area">
                 <div class="audio-controls">
-                    <button id="playCorrectBtn" class="audio-btn correct-btn">
-                        <span class="audio-icon">🔊</span>
-                        <span class="audio-text">Play Correct Pronunciation</span>
-                    </button>
+                    <div class="voice-selection">
+                        <h4>Reference Voices:</h4>
+                        <div class="voice-buttons">
+                            <button id="playMan1Btn" class="voice-btn man-btn" data-voice="man1">
+                                <span class="voice-icon">👨</span>
+                                <span class="voice-text">Man 1</span>
+                            </button>
+                            <button id="playLady1Btn" class="voice-btn lady-btn" data-voice="lady1">
+                                <span class="voice-icon">👩</span>
+                                <span class="voice-text">Lady 1</span>
+                            </button>
+                            <button id="playLady2Btn" class="voice-btn lady-btn" data-voice="lady2">
+                                <span class="voice-icon">👩</span>
+                                <span class="voice-text">Lady 2</span>
+                            </button>
+                        </div>
+                    </div>
                     <button id="recordBtn" class="record-btn">
                         <span class="record-icon">🎤</span>
                         <span class="record-text">Record Your Pronunciation</span>
                     </button>
                 </div>
                 <div class="recording-status" id="recordingStatus"></div>
+                
+                <div class="transcription-area" id="transcriptionArea" style="display: none;">
+                    <h4>What you said:</h4>
+                    <div class="transcription-text" id="transcriptionText">Processing your speech...</div>
+                    <div class="pronunciation-feedback" id="pronunciationFeedback">
+                        <div class="feedback-icon" id="feedbackIcon"></div>
+                        <div class="feedback-message" id="feedbackMessage"></div>
+                        <div class="accuracy-score" id="accuracyScore"></div>
+                    </div>
+                </div>
                 
                 <div class="audio-playback" id="audioPlayback" style="display: none;">
                     <audio controls id="audioPlayer"></audio>

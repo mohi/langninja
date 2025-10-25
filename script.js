@@ -368,9 +368,8 @@ class JapanesePitchTrainer {
             const confidence = result[0].confidence;
             
             this.elements.transcriptionText.textContent = this.transcription;
-            this.elements.transcriptionConfidence.textContent = `Confidence: ${Math.round(confidence * 100)}%`;
             
-            // Check pronunciation accuracy
+            // Check pronunciation accuracy and show feedback in confidence area
             this.checkPronunciationAccuracy(this.transcription, confidence);
         };
         
@@ -395,14 +394,12 @@ class JapanesePitchTrainer {
         const accuracy = this.calculateSimilarity(transcription, expectedPhrase);
         const overallScore = (accuracy + confidence) / 2;
         
-        // Show pronunciation feedback
-        this.elements.pronunciationFeedback.style.display = 'block';
+        // Show pronunciation feedback in confidence area
+        this.elements.transcriptionConfidence.style.display = 'block';
         
         // Determine feedback based on accuracy
-        if (accuracy >= 0.8) {
+        if (accuracy >= 0.9) {
             this.showCorrectFeedback(accuracy, confidence);
-        } else if (accuracy >= 0.5) {
-            this.showPartialFeedback(accuracy, confidence);
         } else {
             this.showIncorrectFeedback(accuracy, confidence);
         }
@@ -449,35 +446,31 @@ class JapanesePitchTrainer {
 
     showCorrectFeedback(accuracy, confidence) {
         this.elements.feedbackIcon.innerHTML = '✅';
-        this.elements.feedbackMessage.textContent = 'Excellent! Perfect pronunciation!';
+        this.elements.feedbackIcon.style.display = 'inline-block';
+        this.elements.feedbackMessage.textContent = 'Perfect! Great job!';
+        this.elements.feedbackMessage.style.display = 'block';
         this.elements.accuracyScore.textContent = `Accuracy: ${Math.round(accuracy * 100)}% | Confidence: ${Math.round(confidence * 100)}%`;
+        this.elements.accuracyScore.style.display = 'block';
         
         this.elements.transcriptionText.style.color = '#38a169';
         this.elements.transcriptionText.style.borderColor = '#38a169';
-        this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #f0fff4, #c6f6d5)';
-        this.elements.pronunciationFeedback.style.borderColor = '#38a169';
+        this.elements.transcriptionConfidence.style.background = 'linear-gradient(135deg, #f0fff4, #c6f6d5)';
+        this.elements.transcriptionConfidence.style.borderColor = '#38a169';
     }
 
-    showPartialFeedback(accuracy, confidence) {
-        this.elements.feedbackIcon.innerHTML = '⚠️';
-        this.elements.feedbackMessage.textContent = 'Good attempt! Close but not quite right.';
-        this.elements.accuracyScore.textContent = `Accuracy: ${Math.round(accuracy * 100)}% | Confidence: ${Math.round(confidence * 100)}%`;
-        
-        this.elements.transcriptionText.style.color = '#d69e2e';
-        this.elements.transcriptionText.style.borderColor = '#d69e2e';
-        this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #fffbeb, #fef3c7)';
-        this.elements.pronunciationFeedback.style.borderColor = '#d69e2e';
-    }
 
     showIncorrectFeedback(accuracy, confidence) {
         this.elements.feedbackIcon.innerHTML = '❌';
-        this.elements.feedbackMessage.textContent = 'Not quite right. Listen to the reference voices and try again.';
+        this.elements.feedbackIcon.style.display = 'inline-block';
+        this.elements.feedbackMessage.textContent = 'Oops, you are almost there!';
+        this.elements.feedbackMessage.style.display = 'block';
         this.elements.accuracyScore.textContent = `Accuracy: ${Math.round(accuracy * 100)}% | Confidence: ${Math.round(confidence * 100)}%`;
+        this.elements.accuracyScore.style.display = 'block';
         
         this.elements.transcriptionText.style.color = '#e53e3e';
         this.elements.transcriptionText.style.borderColor = '#e53e3e';
-        this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #fef5f5, #fed7d7)';
-        this.elements.pronunciationFeedback.style.borderColor = '#e53e3e';
+        this.elements.transcriptionConfidence.style.background = 'linear-gradient(135deg, #fef5f5, #fed7d7)';
+        this.elements.transcriptionConfidence.style.borderColor = '#e53e3e';
     }
     
     stopRecording() {

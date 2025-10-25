@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Japanese Pitch Accent Trainer</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="japanese-styles.css">
 </head>
 <body>
     <div class="container">
@@ -20,10 +20,10 @@
         </header>
 
         <!-- Main Training Area -->
-        <main class="quiz-container">
+        <main class="training-container">
             <!-- Question Display -->
             <div class="question-area">
-                <div class="question-type" id="questionType">Pitch Accent Training</div>
+                <div class="lesson-type" id="lessonType">Pitch Accent Training</div>
                 <div class="japanese-phrase" id="japanesePhrase">はし</div>
                 <div class="pitch-pattern" id="pitchPattern">
                     <div class="pitch-visualization">
@@ -39,7 +39,7 @@
             </div>
 
             <!-- Audio Controls -->
-            <div class="recording-area">
+            <div class="audio-area">
                 <div class="audio-controls">
                     <button id="playCorrectBtn" class="audio-btn correct-btn">
                         <span class="audio-icon">🔊</span>
@@ -50,11 +50,12 @@
                         <span class="record-text">Record Your Pronunciation</span>
                     </button>
                 </div>
+                
                 <div class="recording-status" id="recordingStatus"></div>
                 
                 <div class="audio-playback" id="audioPlayback" style="display: none;">
                     <audio controls id="audioPlayer"></audio>
-                    <button id="playBtn" class="play-btn">Play Recording</button>
+                    <button id="playYourBtn" class="play-btn">Play Your Recording</button>
                 </div>
             </div>
 
@@ -128,6 +129,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="japanese-script.js"></script>
 </body>
 </html>

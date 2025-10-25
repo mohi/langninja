@@ -51,10 +51,12 @@ class JapanesePitchTrainer {
         this.isRecording = false;
         this.recognition = null;
         this.transcription = '';
+        this.microphonePermission = false;
         
         this.initializeElements();
         this.initializeSpeechRecognition();
         this.attachEventListeners();
+        this.checkMicrophonePermission();
         this.updateDisplay();
     }
 
@@ -95,7 +97,11 @@ class JapanesePitchTrainer {
             overallScore: document.getElementById('overallScore'),
             levelScore: document.getElementById('levelScore'),
             recommendations: document.getElementById('recommendations'),
-            restartBtn: document.getElementById('restartBtn')
+            restartBtn: document.getElementById('restartBtn'),
+            permissionModal: document.getElementById('permissionModal'),
+            requestPermissionBtn: document.getElementById('requestPermissionBtn'),
+            skipPermissionBtn: document.getElementById('skipPermissionBtn'),
+            permissionStatus: document.getElementById('permissionStatus')
         };
     }
 
@@ -122,6 +128,8 @@ class JapanesePitchTrainer {
         this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
         this.elements.submitBtn.addEventListener('click', () => this.submitQuiz());
         this.elements.restartBtn.addEventListener('click', () => this.restartQuiz());
+        this.elements.requestPermissionBtn.addEventListener('click', () => this.requestMicrophonePermission());
+        this.elements.skipPermissionBtn.addEventListener('click', () => this.skipMicrophonePermission());
     }
 
     updateDisplay() {
@@ -252,6 +260,11 @@ class JapanesePitchTrainer {
     }
 
     async toggleRecording() {
+        if (!this.microphonePermission) {
+            this.showPermissionModal();
+            return;
+        }
+        
         if (!this.isRecording) {
             await this.startRecording();
         } else {
@@ -432,6 +445,78 @@ class JapanesePitchTrainer {
         this.elements.transcriptionText.style.borderColor = '#e53e3e';
         this.elements.pronunciationFeedback.style.background = 'linear-gradient(135deg, #fef5f5, #fed7d7)';
         this.elements.pronunciationFeedback.style.borderColor = '#e53e3e';
+    }
+    
+    checkMicrophonePermission() {
+        if (navigator.permissions) {
+            navigator.permissions.query({ name: 'microphone' }).then((result) => {
+                if (result.state === 'granted') {
+                    this.microphonePermission = true;
+                    this.hidePermissionModal();
+                } else if (result.state === 'denied') {
+                    this.showPermissionDenied();
+                } else {
+                    this.showPermissionModal();
+                }
+            }).catch(() => {
+                // Fallback for browsers that don't support permissions API
+                this.showPermissionModal();
+            });
+        } else {
+            // Fallback for browsers that don't support permissions API
+            this.showPermissionModal();
+        }
+    }
+    
+    showPermissionModal() {
+        this.elements.permissionModal.style.display = 'flex';
+    }
+    
+    hidePermissionModal() {
+        this.elements.permissionModal.style.display = 'none';
+    }
+    
+    async requestMicrophonePermission() {
+        try {
+            this.elements.permissionStatus.textContent = 'Requesting microphone access...';
+            this.elements.permissionStatus.className = 'permission-status info';
+            
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.microphonePermission = true;
+            
+            // Stop the stream immediately as we just needed permission
+            stream.getTracks().forEach(track => track.stop());
+            
+            this.elements.permissionStatus.textContent = '✅ Microphone access granted! You can now record your pronunciation.';
+            this.elements.permissionStatus.className = 'permission-status success';
+            
+            setTimeout(() => {
+                this.hidePermissionModal();
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Microphone permission denied:', error);
+            this.elements.permissionStatus.textContent = '❌ Microphone access denied. You can still use the app to listen to reference voices, but recording features will be disabled.';
+            this.elements.permissionStatus.className = 'permission-status error';
+            this.microphonePermission = false;
+        }
+    }
+    
+    skipMicrophonePermission() {
+        this.microphonePermission = false;
+        this.elements.permissionStatus.textContent = '⚠️ Recording features disabled. You can still listen to reference voices.';
+        this.elements.permissionStatus.className = 'permission-status info';
+        
+        setTimeout(() => {
+            this.hidePermissionModal();
+        }, 2000);
+    }
+    
+    showPermissionDenied() {
+        this.elements.permissionStatus.textContent = '❌ Microphone access was previously denied. Please enable microphone access in your browser settings to use recording features.';
+        this.elements.permissionStatus.className = 'permission-status error';
+        this.microphonePermission = false;
+        this.hidePermissionModal();
     }
     
     stopRecording() {

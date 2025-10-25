@@ -7,20 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Microphone Permission Modal -->
-    <div class="permission-modal" id="permissionModal">
-        <div class="permission-content">
-            <div class="permission-icon">🎤</div>
-            <h2>Microphone Permission Required</h2>
-            <p>This app needs access to your microphone to record your Japanese pronunciation and provide voice transcription feedback.</p>
-            <div class="permission-buttons">
-                <button id="requestPermissionBtn" class="permission-btn primary">Allow Microphone Access</button>
-                <button id="skipPermissionBtn" class="permission-btn secondary">Continue Without Recording</button>
-            </div>
-            <div class="permission-status" id="permissionStatus"></div>
-        </div>
-    </div>
-
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -88,11 +74,7 @@
                 <div class="transcription-area" id="transcriptionArea" style="display: none;">
                     <h4>What you said:</h4>
                     <div class="transcription-text" id="transcriptionText">Processing your speech...</div>
-                    <div class="pronunciation-feedback" id="pronunciationFeedback">
-                        <div class="feedback-icon" id="feedbackIcon"></div>
-                        <div class="feedback-message" id="feedbackMessage"></div>
-                        <div class="accuracy-score" id="accuracyScore"></div>
-                    </div>
+                    <div class="transcription-confidence" id="transcriptionConfidence"></div>
                 </div>
                 
                 <div class="audio-playback" id="audioPlayback" style="display: none;">

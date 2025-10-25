@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Assessment Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Speech Assessment Quiz</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-counter">
+                <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
+            </div>
+        </header>
+
+        <!-- Main Quiz Area -->
+        <main class="quiz-container">
+            <!-- Question Display -->
+            <div class="question-area">
+                <div class="question-type" id="questionType">Pronunciation</div>
+                <div class="question-content" id="questionContent">
+                    <h2>Please read the following word aloud:</h2>
+                    <div class="word-to-pronounce" id="wordToPronounce">Hello</div>
+                </div>
+                <div class="instructions" id="instructions">
+                    Click the record button and speak clearly into your microphone.
+                </div>
+            </div>
+
+            <!-- Recording Controls -->
+            <div class="recording-area">
+                <div class="recording-controls">
+                    <button id="recordBtn" class="record-btn">
+                        <span class="record-icon">🎤</span>
+                        <span class="record-text">Start Recording</span>
+                    </button>
+                    <div class="recording-status" id="recordingStatus"></div>
+                </div>
+                
+                <div class="audio-playback" id="audioPlayback" style="display: none;">
+                    <audio controls id="audioPlayer"></audio>
+                    <button id="playBtn" class="play-btn">Play Recording</button>
+                </div>
+            </div>
+
+            <!-- Feedback Area -->
+            <div class="feedback-area" id="feedbackArea" style="display: none;">
+                <h3>Your Performance</h3>
+                <div class="score-display">
+                    <div class="score-item">
+                        <span class="score-label">Pronunciation:</span>
+                        <span class="score-value" id="pronunciationScore">85%</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Fluency:</span>
+                        <span class="score-value" id="fluencyScore">78%</span>
+                    </div>
+                </div>
+                <div class="feedback-text" id="feedbackText">
+                    Great job! Your pronunciation was clear and accurate.
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <button id="prevBtn" class="nav-btn prev-btn" disabled>Previous</button>
+                <button id="nextBtn" class="nav-btn next-btn">Next Question</button>
+                <button id="submitBtn" class="nav-btn submit-btn" style="display: none;">Submit Quiz</button>
+            </div>
+        </main>
+
+        <!-- Results Modal -->
+        <div class="modal" id="resultsModal" style="display: none;">
+            <div class="modal-content">
+                <h2>Quiz Complete!</h2>
+                <div class="final-scores">
+                    <div class="final-score">
+                        <span class="score-label">Overall Score:</span>
+                        <span class="score-value" id="overallScore">82%</span>
+                    </div>
+                    <div class="final-score">
+                        <span class="score-label">Level:</span>
+                        <span class="score-value" id="levelScore">Intermediate</span>
+                    </div>
+                </div>
+                <div class="recommendations" id="recommendations">
+                    <h3>Recommendations</h3>
+                    <ul>
+                        <li>Practice pronunciation of difficult sounds</li>
+                        <li>Work on speaking fluency and pace</li>
+                    </ul>
+                </div>
+                <button id="restartBtn" class="restart-btn">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

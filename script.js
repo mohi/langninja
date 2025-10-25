@@ -181,6 +181,13 @@ class JapanesePitchTrainer {
         this.elements.transcriptionArea.style.display = 'none';
         this.elements.pronunciationFeedback.style.display = 'none';
         
+        // Reset transcription area header
+        const transcriptionArea = document.querySelector('.transcription-area h4');
+        if (transcriptionArea) {
+            transcriptionArea.textContent = 'What you said:';
+            transcriptionArea.style.color = '#4a5568';
+        }
+        
         // Reset recording button
         this.elements.recordBtn.innerHTML = `
             <span class="record-icon">🎤</span>
@@ -445,6 +452,11 @@ class JapanesePitchTrainer {
     }
 
     showCorrectFeedback(accuracy, confidence) {
+        // Update the "What you said:" header to show "Correct!"
+        const transcriptionArea = document.querySelector('.transcription-area h4');
+        transcriptionArea.textContent = 'Correct!';
+        transcriptionArea.style.color = '#38a169';
+        
         this.elements.feedbackIcon.innerHTML = '✅';
         this.elements.feedbackIcon.style.display = 'inline-block';
         this.elements.feedbackMessage.textContent = 'Perfect! Great job!';
@@ -460,6 +472,11 @@ class JapanesePitchTrainer {
 
 
     showIncorrectFeedback(accuracy, confidence) {
+        // Update the "What you said:" header to show "Wrong!"
+        const transcriptionArea = document.querySelector('.transcription-area h4');
+        transcriptionArea.textContent = 'Wrong!';
+        transcriptionArea.style.color = '#e53e3e';
+        
         this.elements.feedbackIcon.innerHTML = '❌';
         this.elements.feedbackIcon.style.display = 'inline-block';
         this.elements.feedbackMessage.textContent = 'Oops, you are almost there!';

@@ -51,10 +51,13 @@ class JapanesePitchTrainer {
         this.isRecording = false;
         this.recognition = null;
         this.transcription = '';
+        this.microphonePermission = null; // null = not checked, true = granted, false = denied
+        this.microphoneStream = null;
         
         this.initializeElements();
         this.initializeSpeechRecognition();
         this.attachEventListeners();
+        this.setupCleanup();
         this.updateDisplay();
     }
 
@@ -119,6 +122,25 @@ class JapanesePitchTrainer {
         this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
         this.elements.submitBtn.addEventListener('click', () => this.submitQuiz());
         this.elements.restartBtn.addEventListener('click', () => this.restartQuiz());
+    }
+
+    setupCleanup() {
+        // Clean up microphone stream when page is unloaded
+        window.addEventListener('beforeunload', () => {
+            this.cleanupMicrophone();
+        });
+        
+        // Clean up when navigating away from the page
+        window.addEventListener('pagehide', () => {
+            this.cleanupMicrophone();
+        });
+    }
+
+    cleanupMicrophone() {
+        if (this.microphoneStream) {
+            this.microphoneStream.getTracks().forEach(track => track.stop());
+            this.microphoneStream = null;
+        }
     }
 
     updateDisplay() {
@@ -250,16 +272,37 @@ class JapanesePitchTrainer {
 
     async toggleRecording() {
         if (!this.isRecording) {
-            await this.startRecording();
+            // Check microphone permission first
+            if (this.microphonePermission === null) {
+                await this.checkMicrophonePermission();
+            }
+            
+            if (this.microphonePermission === true) {
+                await this.startRecording();
+            } else if (this.microphonePermission === false) {
+                alert('Microphone access is required to record your pronunciation. Please allow microphone access in your browser settings and refresh the page.');
+            }
         } else {
             this.stopRecording();
         }
     }
 
+    async checkMicrophonePermission() {
+        try {
+            // Request microphone access once
+            this.microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.microphonePermission = true;
+            console.log('Microphone permission granted');
+        } catch (error) {
+            console.error('Microphone permission denied:', error);
+            this.microphonePermission = false;
+        }
+    }
+
     async startRecording() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            this.mediaRecorder = new MediaRecorder(stream);
+            // Use the already granted stream
+            this.mediaRecorder = new MediaRecorder(this.microphoneStream);
             this.audioChunks = [];
             
             this.mediaRecorder.ondataavailable = (event) => {
@@ -293,8 +336,8 @@ class JapanesePitchTrainer {
             this.elements.recordingStatus.classList.add('recording');
             
         } catch (error) {
-            console.error('Error accessing microphone:', error);
-            alert('Please allow microphone access to use this feature.');
+            console.error('Error starting recording:', error);
+            alert('Error starting recording. Please try again.');
         }
     }
 
@@ -354,8 +397,8 @@ class JapanesePitchTrainer {
             this.elements.recordingStatus.textContent = 'Recording saved!';
             this.elements.recordingStatus.classList.remove('recording');
             
-            // Stop all tracks to release microphone
-            this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            // Don't stop the microphone stream here - keep it for future recordings
+            // Only stop individual recording tracks, not the main stream
         }
     }
 

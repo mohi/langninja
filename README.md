@@ -1,46 +1,52 @@
-# Speech Assessment Quiz App
+# 🇯🇵 Japanese Pitch Accent Trainer
 
-A modern, responsive web application for speech assessment and pronunciation practice, similar to SpeechAce.
+A modern, interactive web application for learning Japanese pitch accent patterns with voice transcription feedback and pronunciation assessment.
 
 ## Features
 
-- 🎤 **Speech Recording**: Record audio responses using your microphone
-- 📝 **Multiple Question Types**: Pronunciation, fluency, and task achievement exercises
-- 📊 **Real-time Scoring**: Get instant feedback on your performance
+- 🎤 **Voice Recording**: Record your Japanese pronunciation with real-time feedback
+- 🔊 **Reference Voices**: Listen to 3 different native speaker voices (man1, lady1, lady2)
+- 📝 **Voice Transcription**: See what you said with accuracy assessment
+- 🎯 **Pitch Pattern Training**: Learn correct Japanese pitch accent patterns
+- 📊 **Pronunciation Scoring**: Get detailed feedback on your pronunciation accuracy
 - 📱 **Responsive Design**: Works on desktop, tablet, and mobile devices
-- 🎯 **Progress Tracking**: Visual progress bar and question navigation
-- 📈 **Results & Analytics**: Comprehensive scoring with personalized recommendations
+- 🎨 **Visual Feedback**: Color-coded results with encouraging messages
 
-## Question Types
+## Training Phrases
 
-1. **Pronunciation**: Read words and sentences aloud
-2. **Fluency**: Extended speaking tasks for 30+ seconds
-3. **Task Achievement**: Descriptive speaking exercises
+1. **橋を渡る** (cross the bridge) - HLLL pitch pattern
+2. **雨の音が美しい** (the rain sounds beautiful) - LLLLHHH pitch pattern  
+3. **びょういんに行く** (go to the hospital) - LHHHLLL pitch pattern
+4. **Custom User Input** - Practice your own phrases
 
 ## How to Use
 
-1. Open `index.html` in a modern web browser
+1. Open the application in a modern web browser
 2. Allow microphone access when prompted
-3. Follow the quiz questions and record your responses
-4. Review your scores and feedback after each question
-5. Complete the quiz to see your final results and recommendations
+3. Listen to reference voices by clicking the voice buttons (👨 Man 1, 👩 Lady 1, 👩 Lady 2)
+4. Record your pronunciation using the microphone button
+5. Review the transcription and pronunciation feedback
+6. Practice until you achieve good accuracy scores
+7. Move to the next phrase and continue learning
 
 ## Technical Details
 
 - **HTML5**: Semantic structure with accessibility features
 - **CSS3**: Modern styling with gradients, animations, and responsive design
-- **JavaScript ES6+**: Class-based architecture with clean separation of concerns
-- **Web APIs**: MediaRecorder API for audio recording
+- **JavaScript ES6+**: Class-based architecture with speech recognition
+- **Web APIs**: MediaRecorder API for audio recording, Web Speech API for transcription
+- **Audio Files**: Reference voice recordings for each phrase
 
 ## Browser Requirements
 
 - Modern web browser with microphone access
 - JavaScript enabled
-- HTTPS connection (required for microphone access in production)
+- HTTPS connection (required for microphone access and speech recognition)
+- Chrome/Edge recommended for best speech recognition support
 
 ## Live Demo
 
-Visit the live demo at: [Your GitHub Pages URL]
+Visit the live demo at: https://mohi.github.io/langninja
 
 ## License
 

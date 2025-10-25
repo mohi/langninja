@@ -231,19 +231,21 @@ class JapanesePitchTrainer {
         
         button.innerHTML = `
             ${this.getVoiceIcon(voiceType)}
-            <span class="voice-text">Playing...</span>
         `;
         button.disabled = true;
+        button.classList.add('playing');
         
         audio.onended = () => {
             button.innerHTML = originalContent;
             button.disabled = false;
+            button.classList.remove('playing');
         };
         
         audio.onerror = () => {
             console.error(`Audio file not found: ${audioPath}`);
             button.innerHTML = originalContent;
             button.disabled = false;
+            button.classList.remove('playing');
             alert(`Audio file not found: ${audioPath}`);
         };
         
@@ -251,6 +253,7 @@ class JapanesePitchTrainer {
             console.error('Error playing audio:', error);
             button.innerHTML = originalContent;
             button.disabled = false;
+            button.classList.remove('playing');
         });
     }
     

@@ -522,15 +522,16 @@ body {
 .voice-btn {
     background: linear-gradient(135deg, #f7fafc, #edf2f7);
     border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 12px 16px;
+    border-radius: 16px;
+    padding: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    min-width: 80px;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 120px;
     font-size: 0.9rem;
 }
 
@@ -549,6 +550,22 @@ body {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+}
+
+.voice-btn.playing {
+    background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+    border-color: #38b2ac;
+    box-shadow: 0 4px 12px rgba(56, 178, 172, 0.3);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .voice-btn.man-btn:hover {
@@ -574,11 +591,10 @@ body {
 }
 
 .voice-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 96px;
+    height: 96px;
+    border-radius: 12px;
     object-fit: cover;
-    margin-bottom: 5px;
     border: 2px solid #e2e8f0;
     transition: all 0.3s ease;
 }
@@ -661,6 +677,12 @@ body {
     }
     
     .voice-btn {
-        min-width: 120px;
+        min-width: 100px;
+        min-height: 100px;
+    }
+    
+    .voice-icon {
+        width: 80px;
+        height: 80px;
     }
 }

@@ -223,8 +223,14 @@ class JapanesePitchTrainer {
         const button = this.elements[`play${this.capitalizeFirst(voiceType)}Btn`];
         const originalContent = button.innerHTML;
         
+        const voiceNames = {
+            'man1': 'Fenrir',
+            'lady1': 'Zephyr', 
+            'lady2': 'Despina'
+        };
+        
         button.innerHTML = `
-            <span class="voice-icon">${this.getVoiceIcon(voiceType)}</span>
+            ${this.getVoiceIcon(voiceType)}
             <span class="voice-text">Playing...</span>
         `;
         button.disabled = true;
@@ -259,11 +265,11 @@ class JapanesePitchTrainer {
     
     getVoiceIcon(voiceType) {
         const icons = {
-            'man1': '👨',
-            'lady1': '👩',
-            'lady2': '👩'
+            'man1': '<img src="voices/fenrir.jpg" alt="Fenrir" class="voice-icon">',
+            'lady1': '<img src="voices/zephyr.jpeg" alt="Zephyr" class="voice-icon">',
+            'lady2': '<img src="voices/despina.png" alt="Despina" class="voice-icon">'
         };
-        return icons[voiceType] || '🔊';
+        return icons[voiceType] || '<span class="voice-icon">🔊</span>';
     }
     
     capitalizeFirst(str) {

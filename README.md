@@ -42,6 +42,8 @@ A modern, responsive web application for speech assessment and pronunciation pra
 
 Visit the live demo at: [Your GitHub Pages URL]
 
+http://mohit.jp/langninja/
+
 ## License
 
 MIT License - feel free to use and modify as needed.

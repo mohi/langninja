@@ -26,7 +26,7 @@ class JapanesePitchTrainer {
             {
                 id: 'hospital-visit',
                 type: 'vowel-contrast',
-                phrase: 'びょういんに行く',
+                phrase: '病院に行く',
                 pitchPattern: 'LHHHLLL',
                 meaning: 'びょういんに行く (go to the hospital)',
                 exampleSentence: 'びょういんに行く。（病院 / byōin に いく）— "go to the hospital."',
@@ -56,6 +56,7 @@ class JapanesePitchTrainer {
         
         this.initializeElements();
         this.initializeSpeechRecognition();
+        this.buildLessonList();
         this.attachEventListeners();
         this.setupCleanup();
         this.updateDisplay();
@@ -95,6 +96,11 @@ class JapanesePitchTrainer {
             prevBtn: document.getElementById('prevBtn'),
             nextBtn: document.getElementById('nextBtn'),
             submitBtn: document.getElementById('submitBtn'),
+            menuToggle: document.getElementById('menuToggle'),
+            drawerClose: document.getElementById('drawerClose'),
+            drawerOverlay: document.getElementById('drawerOverlay'),
+            lessonDrawer: document.getElementById('lessonDrawer'),
+            lessonList: document.getElementById('lessonList'),
             resultsModal: document.getElementById('resultsModal'),
             overallScore: document.getElementById('overallScore'),
             levelScore: document.getElementById('levelScore'),
@@ -126,6 +132,78 @@ class JapanesePitchTrainer {
         this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
         this.elements.submitBtn.addEventListener('click', () => this.submitQuiz());
         this.elements.restartBtn.addEventListener('click', () => this.restartQuiz());
+        this.elements.menuToggle.addEventListener('click', () => this.toggleDrawer());
+        this.elements.drawerClose.addEventListener('click', () => this.closeDrawer());
+        this.elements.drawerOverlay.addEventListener('click', () => this.closeDrawer());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.closeDrawer();
+        });
+    }
+
+    buildLessonList() {
+        this.elements.lessonList.innerHTML = '';
+        this.lessons.forEach((lesson, index) => {
+            const li = document.createElement('li');
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'lesson-link';
+            button.dataset.index = index;
+            button.innerHTML = `
+                <span class="lesson-index-num">${index + 1}</span>
+                <span class="lesson-link-text">
+                    <span class="lesson-link-title">${this.getLessonTypeLabel(lesson.type)}</span>
+                    <span class="lesson-link-phrase">${lesson.phrase}</span>
+                </span>
+                <span class="lesson-link-check" aria-hidden="true">✓</span>
+            `;
+            button.addEventListener('click', () => this.goToQuestion(index));
+            li.appendChild(button);
+            this.elements.lessonList.appendChild(li);
+        });
+    }
+
+    updateLessonList() {
+        const links = this.elements.lessonList.querySelectorAll('.lesson-link');
+        links.forEach((link, index) => {
+            link.classList.toggle('active', index === this.currentQuestion);
+            link.classList.toggle('completed', !!this.scores[index]);
+            if (index === this.currentQuestion) {
+                link.setAttribute('aria-current', 'true');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    }
+
+    toggleDrawer() {
+        if (this.elements.lessonDrawer.classList.contains('open')) {
+            this.closeDrawer();
+        } else {
+            this.openDrawer();
+        }
+    }
+
+    openDrawer() {
+        this.elements.lessonDrawer.classList.add('open');
+        this.elements.drawerOverlay.classList.add('open');
+        this.elements.menuToggle.classList.add('open');
+        this.elements.menuToggle.setAttribute('aria-expanded', 'true');
+        this.elements.lessonDrawer.setAttribute('aria-hidden', 'false');
+    }
+
+    closeDrawer() {
+        this.elements.lessonDrawer.classList.remove('open');
+        this.elements.drawerOverlay.classList.remove('open');
+        this.elements.menuToggle.classList.remove('open');
+        this.elements.menuToggle.setAttribute('aria-expanded', 'false');
+        this.elements.lessonDrawer.setAttribute('aria-hidden', 'true');
+    }
+
+    goToQuestion(index) {
+        if (index < 0 || index >= this.lessons.length) return;
+        this.currentQuestion = index;
+        this.updateDisplay();
+        this.closeDrawer();
     }
 
     setupCleanup() {
@@ -164,6 +242,9 @@ class JapanesePitchTrainer {
         // Update pitch visualization
         this.updatePitchVisualization(lesson.pitchPattern);
         
+        // Keep lesson index highlight in sync
+        this.updateLessonList();
+        
         // Update navigation buttons
         this.elements.prevBtn.disabled = this.currentQuestion === 0;
         
@@ -179,7 +260,9 @@ class JapanesePitchTrainer {
         this.elements.feedbackArea.style.display = 'none';
         this.elements.audioPlayback.style.display = 'none';
         this.elements.transcriptionArea.style.display = 'none';
-        this.elements.pronunciationFeedback.style.display = 'none';
+        if (this.elements.pronunciationFeedback) {
+            this.elements.pronunciationFeedback.style.display = 'none';
+        }
         
         // Reset transcription area header
         const transcriptionArea = document.querySelector('.transcription-area h4');
@@ -215,9 +298,11 @@ class JapanesePitchTrainer {
         pitchVisualization.innerHTML = '';
         
         // Create new pitch bars based on pattern length
+        const pitchClassMap = { H: 'high', L: 'low', M: 'medium' };
         patternArray.forEach((pitch, index) => {
             const pitchBar = document.createElement('div');
-            pitchBar.className = `pitch-bar ${pitch.toLowerCase()}`;
+            const pitchClass = pitchClassMap[pitch.toUpperCase()] || 'medium';
+            pitchBar.className = `pitch-bar ${pitchClass}`;
             pitchBar.textContent = pitch;
             pitchBar.id = `pitch${index + 1}`;
             pitchVisualization.appendChild(pitchBar);
@@ -284,7 +369,8 @@ class JapanesePitchTrainer {
             'lady1': '<img src="voices/zephyr.jpeg" alt="Zephyr" class="voice-icon">',
             'lady2': '<img src="voices/despina.png" alt="Despina" class="voice-icon">'
         };
-        return icons[voiceType] || '<span class="voice-icon">🔊</span>';
+        const img = icons[voiceType] || '<span class="voice-icon">🔊</span>';
+        return `<span class="voice-icon-wrap">${img}<span class="play-badge" aria-hidden="true"></span></span>`;
     }
     
     capitalizeFirst(str) {

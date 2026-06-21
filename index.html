@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Lesson Index Navigation -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Open lesson index" aria-expanded="false" aria-controls="lessonDrawer">
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+    </button>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <nav class="lesson-drawer" id="lessonDrawer" aria-label="Lesson index" aria-hidden="true">
+        <div class="drawer-header">
+            <h2>Lessons</h2>
+            <button class="drawer-close" id="drawerClose" aria-label="Close lesson index">&times;</button>
+        </div>
+        <ul class="lesson-list" id="lessonList"></ul>
+    </nav>
+
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -51,13 +66,22 @@
                         <h4>Reference Voices:</h4>
                         <div class="voice-buttons">
                             <button id="playMan1Btn" class="voice-btn man-btn" data-voice="man1">
-                                <img src="voices/fenrir.jpg" alt="Fenrir" class="voice-icon">
+                                <span class="voice-icon-wrap">
+                                    <img src="voices/fenrir.jpg" alt="Fenrir" class="voice-icon">
+                                    <span class="play-badge" aria-hidden="true"></span>
+                                </span>
                             </button>
                             <button id="playLady1Btn" class="voice-btn lady-btn" data-voice="lady1">
-                                <img src="voices/zephyr.jpeg" alt="Zephyr" class="voice-icon">
+                                <span class="voice-icon-wrap">
+                                    <img src="voices/zephyr.jpeg" alt="Zephyr" class="voice-icon">
+                                    <span class="play-badge" aria-hidden="true"></span>
+                                </span>
                             </button>
                             <button id="playLady2Btn" class="voice-btn lady-btn" data-voice="lady2">
-                                <img src="voices/despina.png" alt="Despina" class="voice-icon">
+                                <span class="voice-icon-wrap">
+                                    <img src="voices/despina.png" alt="Despina" class="voice-icon">
+                                    <span class="play-badge" aria-hidden="true"></span>
+                                </span>
                             </button>
                         </div>
                     </div>

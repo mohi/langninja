@@ -42,7 +42,7 @@ A modern, responsive web application for speech assessment and pronunciation pra
 
 Visit the live demo at: [Your GitHub Pages URL]
 
-http://mohit.jp/langninja/
+https://mohi.github.io/langninja/
 
 ## License
 
